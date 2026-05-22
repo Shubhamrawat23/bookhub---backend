@@ -27,7 +27,7 @@ def author_login(data):
     
     if (resp[4] != author_hash_password):
         response['success'] = False
-        response['code'] = 401
+        response['code'] = 422
         response['message'] = "Wrong Password"
         response['error'] = {
             "field": "password"
@@ -52,7 +52,7 @@ def forgot_Password(data):
     if (data.confirm_password != data.new_password):
         response['success'] = False
         response['message'] = "New and Confirm Passwords are not same."
-        response['code'] = 401
+        response['code'] = 422
         return response
     
     hash_pswrd = hashlib.sha256(data.new_password.encode()).hexdigest()

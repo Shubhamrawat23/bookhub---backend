@@ -122,7 +122,7 @@ backend/
 ```
 
 
-![alt text](<shape_a4eYW-9ecbZbpZHYsxNv5 at 26-05-23 18.58.24.png>)
+![alt text](architectureflow.png)
 
 ---
 

@@ -1,4 +1,4 @@
-from db_connection import db_connection
+from app.db.db_connection import db_connection
 
 def create_tables():
     con = db_connection()
@@ -48,6 +48,7 @@ def create_tables():
     cur.execute("""
         CREATE TABLE IF NOT EXISTS admins (
             admin_id SERIAL PRIMARY KEY,
+            admin_code varchar(100),
             name VARCHAR(100),
             email VARCHAR(100) UNIQUE,
             password VARCHAR(255),

@@ -23,7 +23,7 @@ def author_forgot_password(email: str, new_password: str):
 def adminLogin(email: str):
     con = db_connection()
     cur = con.cursor()
-    data = cur.execute("SELECT admin_id, name, email, password FROM admins WHERE email = %s;",(email,))
+    data = cur.execute("SELECT admin_id, admin_code, name, email, password FROM admins WHERE email = %s;",(email,))
     data = cur.fetchone()
     cur.close()
     con.close()

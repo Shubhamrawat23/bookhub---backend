@@ -13,6 +13,16 @@ def author_login(data):
         "error": None
     }
 
+    if(len(data.password)<6):
+        response['success'] = False
+        response['code'] = 422
+        response['message'] = "Password lenght should be more than 6."
+        response['error'] = {
+            "field": "password"
+        }
+        return response
+
+
     author_hash_password = hashlib.sha256(data.password.encode()).hexdigest()
 
     resp = authorLogin(data.email)
@@ -35,6 +45,12 @@ def author_login(data):
         return response
     
     response['message'] = "Successfully Login"
+    response['data'] = {
+        "author_id": resp[0],
+        "name": resp[1],
+        "email": resp[2],
+        "phone": resp[3]
+    }
     return response
 
 # author forgot password
@@ -53,6 +69,15 @@ def forgot_Password(data):
         response['success'] = False
         response['message'] = "New and Confirm Passwords are not same."
         response['code'] = 422
+        return response
+    
+    if(len(data.confirm_password)<6 and len(data.new_password)<6):
+        response['success'] = False
+        response['code'] = 422
+        response['message'] = "Password lenght should be more than 6."
+        response['error'] = {
+            "field": "new_password and confirm_password"
+        }
         return response
     
     hash_pswrd = hashlib.sha256(data.new_password.encode()).hexdigest()
@@ -97,9 +122,9 @@ def admin_login(data):
         }
         return response
     
-    if (resp[3] != admin_hash_password):
+    if (resp[4] != admin_hash_password):
         response['success'] = False
-        response['code'] = 401
+        response['code'] = 422
         response['message'] = "Wrong Password"
         response['error'] = {
             "field": "password"
@@ -107,4 +132,10 @@ def admin_login(data):
         return response
     
     response['message'] = "Successfully Login"
+    response['data'] = {
+        "admin_id":resp[0],
+        "admin_code": resp[1],
+        "name": resp[2],
+        "email": resp[3]
+    }
     return response

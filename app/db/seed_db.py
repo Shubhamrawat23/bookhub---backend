@@ -1,10 +1,11 @@
-from db_connection import db_connection
+from app.db.db_connection import db_connection
 import json
 import hashlib
 
 def seed_database():
     # Set admin password manually
     admin_hash_password = hashlib.sha256("admin@123".encode()).hexdigest()
+    admin_hash_password_2 = hashlib.sha256("admin002@123".encode()).hexdigest()
 
     con = db_connection()
 
@@ -85,16 +86,19 @@ def seed_database():
     cur.execute(
         """
         INSERT INTO admins (
+            admin_code,
             name,
             email,
             password
         )
-        VALUES(%s, %s, %s)
+        VALUES
+            (%s, %s, %s, %s),
+            (%s, %s, %s, %s)
         ON CONFLICT (admin_id) DO NOTHING;
-        """,(
-            "ADMIN_00001",
-            "admin_00001@bookleafpub.com",
-            admin_hash_password
+        """,
+        (
+            "ADMIN0001", "ADMIN_00001", "admin_00001@bookleafpub.com", admin_hash_password,
+            "ADMIN0002", "ADMIN_00002", "admin_00002@bookleafpub.com", admin_hash_password_2
         )
     )
 

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Form, File, UploadFile, Query
-from app.modules.tickets.tkt_service import create_tkt, tkts_listing, chat_history, save_chat_history, save_admin_actions
+from app.modules.tickets.tkt_service import create_tkt, tkts_listing, chat_history, save_chat_history, save_admin_actions, tktDetail_for_admin
 from app.modules.tickets.tkt_schemas import SaveMessage, TktActions
+from app.helper.helpers import check_admin
 
 tkt_router = APIRouter()
 
@@ -10,8 +11,6 @@ def author_create_tkt_route(
     book_id: str = Form(...),
     subject: str = Form(...),
     description: str = Form(...),
-    status: int = Form(None),
-    priority: int = Form(None),
     category: str = Form(...),
     file: UploadFile = File(None)
     ):
@@ -22,8 +21,6 @@ def author_create_tkt_route(
             "subject": subject,
             "description": description,
             "category": category,
-            "status": status,
-            "priority": priority,
         }
         response = create_tkt(data, file)
         return response
@@ -40,7 +37,7 @@ def tkts_author_route(author_id: str = Query(...)):
 
         if author_id == "all":
             response['success'] = False
-            response['code'] = 400
+            response['code'] = 401
             response['message'] = "Unautherized Access"
             response['error'] = {
                     "field":"author_id"
@@ -51,26 +48,8 @@ def tkts_author_route(author_id: str = Query(...)):
         return response
 
 @tkt_router.get("/author/tkt_chat")
-def tkt_chat_history_author_route(tkt_code: str = Query(...), access_by: str = Query(...)):
-        
-        response = {
-            "success": True,
-            "code": 200,
-            "message": "",
-            "data": {},
-            "error": None
-        }
-
-        if (access_by.lower()) != "author":
-            response['success'] = False
-            response['code'] = 400
-            response['message'] = "Unautherized Access"
-            response['error'] = {
-                    "field":"access_by"
-            }
-            return response
-
-        response = chat_history(tkt_code, access_by)
+def tkt_chat_history_author_route(tkt_code: str = Query(...), access_by: str = Query(...), author_id: str = Query(...)):
+        response = chat_history(tkt_code, access_by, author_id)
 
         return response
 
@@ -87,11 +66,12 @@ def save_author_chat_history_route(data: SaveMessage):
 @tkt_router.get("/admin/list")
 def tkts_admin_route(
         author_id: str = Query(...), # send 'all'
-        status_filter: str = Query(None), 
-        category_filter: str = Query(None), 
-        priority_filter: str = Query(None), 
-        start_date_tz: str = Query(None), 
-        end_date_tz: str = Query(None)
+        admin_code: str = Query(...),
+        status_filter: str = Query(""), 
+        category_filter: str = Query(""), 
+        priority_filter: str = Query(""), 
+        start_date_tz: str = Query(""), 
+        end_date_tz: str = Query("")
     ):
         
         response = {
@@ -102,9 +82,16 @@ def tkts_admin_route(
             "error": None
         }
 
+        is_admin_exists = check_admin(admin_code)
+        if not is_admin_exists:
+                response['message'] = "Unautherized Access"
+                response['code'] = 401
+                response['success'] = False
+                return response
+
         if (author_id.lower()) != "all":
             response['success'] = False
-            response['code'] = 400
+            response['code'] = 401
             response['message'] = "Unautherized Access"
             response['error'] = {
                     "field":"author_id"
@@ -117,7 +104,7 @@ def tkts_admin_route(
 
 # get chat history for admin
 @tkt_router.get("/admin/tkt_chat")
-def tkt_chat_history_admin_route(tkt_code: str = Query(...), access_by: str = Query(...)):
+def tkt_chat_history_admin_route(tkt_code: str = Query(...), access_by: str = Query(...),author_id: str = Query(...)):
         
         response = {
             "success": True,
@@ -129,14 +116,14 @@ def tkt_chat_history_admin_route(tkt_code: str = Query(...), access_by: str = Qu
 
         if (access_by.lower()) != "admin":
             response['success'] = False
-            response['code'] = 400
+            response['code'] = 401
             response['message'] = "Unautherized Access"
             response['error'] = {
                     "field":"access_by"
             }
             return response
         
-        response = chat_history(tkt_code, access_by)
+        response = chat_history(tkt_code, access_by, author_id)
         return response
 
 
@@ -154,3 +141,9 @@ def save_admin_chat_history_route(data: SaveMessage):
 def admin_actions_route(data: TktActions):
        resposne = save_admin_actions(data)
        return resposne
+
+# get tkt data for admin
+@tkt_router.get('/admin/tkt_detail')
+def tktDetail_for_admin_route(admin_code: str, ticket_code:str):
+       response = tktDetail_for_admin(admin_code, ticket_code)
+       return response

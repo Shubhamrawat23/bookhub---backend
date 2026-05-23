@@ -111,11 +111,13 @@ def fetch_authors_tkt(author_id="all", status_filter="", category_filter="", pri
 
         filters_where = f"WHERE {' AND '.join(filters)}" if filters else ""
 
-        cur.execute(f"SELECT * FROM query_tickets {filters_where} ORDER BY id DESC;", tuple(filter_val))
+        cur.execute(f"SELECT t.*, a.name, b.title FROM query_tickets t LEFT JOIN authors a ON a.author_id = t.author_id LEFT JOIN books b ON b.book_id = t.book_id {filters_where} ORDER BY id DESC;", tuple(filter_val))
+        last_query = cur.query.decode('utf-8')
+        print(last_query)
     else:
         cur.execute(
             """
-                SELECT id, ticket_code, subject, description, attachment_url, created_at FROM query_tickets WHERE author_id = %s ORDER BY id DESC;
+                SELECT id, ticket_code, subject, description, category, status, priority, attachment_url, created_at FROM query_tickets WHERE author_id = %s ORDER BY id DESC;
             """,(author_id,)
         )
 
@@ -189,3 +191,19 @@ def save_action_for_tkt(ticket_code, action=None, action_val=None):
         return data
     
     return None
+
+
+def fetch_tkt_data_for_admin(ticket_code):
+    con = db_connection()
+    cur = con.cursor(cursor_factory=RealDictCursor)
+
+    cur.execute(
+        """
+            SELECT qt.*, a.name as assigned_to FROM query_tickets qt LEFT JOIN admins a ON a.admin_id = qt.assigned_to WHERE ticket_code = %s;
+        """,(ticket_code,)
+    )
+
+    data = cur.fetchone()
+    cur.close()
+    con.close()
+    return data

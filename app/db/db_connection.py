@@ -11,7 +11,7 @@ def db_connection():
             user = os.getenv('DB_USER'),
             password = os.getenv('DB_PASSWORD'),
             host = os.getenv('DB_HOST'),
-            post = os.getenv('DB_POST'),
+            post = os.getenv('DB_PORT'),
         )
     except Exception as e:
         print("db connection failed")

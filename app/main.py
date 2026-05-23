@@ -10,6 +10,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:5173",
+    "bookleafpub-frontend.vercel.app"
 ]
 
 app.add_middleware(

@@ -1,90 +1,256 @@
 # BookLeaf Assignment Backend
 
-Backend service for BookLeaf author support system built using FastAPI and PostgreSQL.
+Backend service for the BookLeaf Author & Admin Support System built using FastAPI and PostgreSQL.
 
-## Tech Stack
+---
+
+# Live Demo Links
+
+## Frontend Application
+
+#### Author Login
+https://bookleafpub-frontend.vercel.app or https://bookleafpub-frontend.vercel.app/author/login
+
+#### Admin Login
+https://bookleafpub-frontend.vercel.app/admin/login
+
+## Backend API Domian
+
+https://bookleafpub-backend-production.up.railway.app
+
+## Swagger API Documentation
+
+https://bookleafpub-backend-production.up.railway.app/docs
+
+---
+
+# Test Credentials
+
+## Author Portal
+
+Email: priya.sharma@email.com  
+Password: 123456
+
+#### Note: You can create/update new password for other authors also through forgot password (https://bookleafpub-frontend.vercel.app/author/forgot-password)
+---
+
+## Admin Portal
+
+#### ADMIN 1
+Email: admin_00001@bookleafpub.com  
+Password: admin@123
+
+#### ADMIN 2
+Email: admin_00002@bookleafpub.com  
+Password: admin002@123
+
+---
+
+# Project Overview
+
+This project is a support and management system for BookLeaf publishers.
+
+The platform includes:
+
+- Author Portal
+- Admin Portal
+- Book Management
+- Support Ticket System
+- Ticket Chat System
+
+The backend exposes REST APIs using FastAPI and stores data using PostgreSQL.
+
+---
+
+# Tech Stack
+
+## Backend
 
 - Python
 - FastAPI
 - PostgreSQL
 - Pydantic
 - Uvicorn
-- hashlib (password hashing for assignment MVP)
+- psycopg2
+- python-dotenv
+- python-multipart
 
 ---
 
-## Project Structure
+# Deployment Notes
 
-backend/<br>
-├── app/<br>
-│   ├── main.py <br>
-│   ├── db/ <br>
-│   │   ├── init_db.py <br>
-│   │   ├── db_connection.py <br> 
-│   │   └── seed_db.py <br>
-│   ├── modules/ <br>
-│   │   └── auth/ <br>
-│   │       ├── auth_routes.py <br>
-│   │       ├── auth_service.py <br>
-│   │       ├── auth_repository.py <br>
-│   │       └── auth_schemas.py <br>
-└── requirements.txt <br>
+- Backend deployed on Railway
+- PostgreSQL hosted on Railway PostgreSQL
+- Frontend deployed on Vercel
+- Environment variables configured securely through Railway/Vercel dashboards
+- Configured CORS handling between Railway backend and Vercel frontend
 
 ---
 
-## Features Implemented
+# Project Structure
 
-### Authentication
+```text
+backend/
+│
+├── app/
+│   ├── main.py
+│   │
+│   ├── db/
+│   │   ├── db_connection.py
+│   │   ├── init_db.py
+│   │   └── seed_db.py
+│   │
+│   ├── helpers/
+│   │
+│   ├── modules/
+│   │   ├── auth/
+│   │   │   ├── auth_routes.py
+│   │   │   ├── auth_service.py
+│   │   │   ├── auth_repository.py
+│   │   │   └── auth_schemas.py
+│   │   │
+│   │   ├── books/
+│   │   │
+│   │   ├── tickets/
+│   │   │
+│   │   └── admin/
+│   │
+│   └── config/
+│
+├── requirements.txt
+└── README.md
+```
 
-Author side:
+
+![alt text](image.png)
+
+---
+
+# Architecture Decisions
+
+The backend follows a feature-based modular architecture for scalability and maintainability.
+
+---
+
+# Architecture Layers
+
+## Routes Layer
+
+Handles API endpoints and request routing.
+
+## Schemas Layer
+
+Handles request/response validation and data typing using Pydantic BaseModel schemas.
+
+## Service Layer
+
+Contains business logic and validations.
+
+## Repository Layer
+
+Handles direct PostgreSQL database operations.
+
+---
+
+# Request Flow
+
+```text
+Frontend
+   ↓
+FastAPI Routes
+   ↓
+Schemas Layer
+   ↓
+Service Layer
+   ↓
+Repository Layer
+   ↓
+PostgreSQL Database
+```
+
+---
+
+# Features Implemented
+
+## Authentication
+
+## Author Side
 
 - Author login
 - Forgot password
-- Password hashing using SHA256
+- Password reset
+- Password hashing using SHA256 (implemented for assignment MVP scope)
 
-Admin side:
+## Admin Side
 
 - Admin login
+- Password hashing using SHA256 (implemented for assignment MVP scope)
+- Admin ticket management
 
 ---
 
-## Database Setup
+# Book Management
 
-Create PostgreSQL database:
+- Fetch author books
+- Book metadata handling
+- Royalty information handling
 
-```sql
-CREATE DATABASE bookleaf_db;
-```
+---
 
-Update database credentials in:
+# Ticket Management
 
-`app/db/db_connection.py`
+- Create support tickets
+- Fetch author tickets
+- Ticket status updates
+- Ticket message/chat system
+- Admin ticket management
+- Ticket priority handling
+
+---
+
+# Database Structure
+
+# Main Tables
+
+## authors
+
+Stores author information.
+
+## books
+
+Stores author books and royalty-related information.
+
+## query_tickets
+
+Stores support tickets raised by authors.
+
+## ticket_messages
+
+Stores ticket message/chat history.
+
+## admins
+
+Stores admin credentials and management information.
+
+---
+
+# Environment Variables
+
+Create a `.env` file inside backend root.
 
 Example:
 
-```python
-host=""
-database=""
-user=""
-password=""
-port=""
+```env
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+DB_HOST=
+DB_PORT=
 ```
 
 ---
 
-## Seed Database
-
-Seed authors/books/admins into database.
-
-Run from backend root:
-
-```bash
-python -m app.db.seed_db
-```
-
----
-
-## Install Dependencies
+# Install Dependencies
 
 Create virtual environment:
 
@@ -92,23 +258,88 @@ Create virtual environment:
 python -m venv venv
 ```
 
-Activate:
+---
 
-### Windows
+# Activate Virtual Environment
+
+## Windows
 
 ```bash
 venv\Scripts\activate
 ```
 
-Install packages:
+---
+
+# Install Requirements
 
 ```bash
-pip install fastapi uvicorn psycopg2 pydantic
+pip install -r requirements.txt
 ```
 
 ---
 
-## Run Backend
+# Python Requirements
+
+```txt
+annotated-doc==0.0.4
+annotated-types==0.7.0
+anyio==4.13.0
+click==8.4.0
+colorama==0.4.6
+fastapi==0.136.1
+h11==0.16.0
+idna==3.15
+psycopg2-binary==2.9.12
+pydantic==2.13.4
+pydantic_core==2.46.4
+python-dotenv==1.2.2
+python-multipart==0.0.29
+starlette==1.0.0
+typing-inspection==0.4.2
+typing_extensions==4.15.0
+uvicorn==0.47.0
+```
+
+---
+
+# Database Setup
+
+## Create Database
+
+```sql
+CREATE DATABASE bookleaf_db;
+```
+
+---
+
+# Initialize Database Tables
+
+Run from backend root:
+
+```bash
+python -m app.db.init_db
+```
+
+---
+
+# Seed Database
+
+Run from backend root:
+
+```bash
+python -m app.db.seed_db
+```
+
+This seeds:
+
+- Authors
+- Books
+- Admins
+- Sample ticket data
+
+---
+
+# Run Backend Server
 
 From backend root:
 
@@ -116,11 +347,19 @@ From backend root:
 uvicorn app.main:app --reload
 ```
 
+Backend runs at:
+
+```text
+http://127.0.0.1:8000
+```
+
 ---
 
-## API Docs
+# API Documentation
 
-Swagger docs:
+FastAPI automatically generates Swagger/OpenAPI documentation.
+
+## Local Swagger Docs
 
 ```text
 http://127.0.0.1:8000/docs
@@ -128,16 +367,24 @@ http://127.0.0.1:8000/docs
 
 ---
 
-## Current API Endpoints
-
-### Auth
-
-### Author login
-
-POST
+## Live Swagger Docs
 
 ```text
-/auth/login
+https://your-backend.up.railway.app/docs
+```
+
+---
+
+# API Endpoints
+
+# Authentication APIs
+
+## Author Login
+
+### POST
+
+```text
+/auth/author/login
 ```
 
 Body:
@@ -151,19 +398,19 @@ Body:
 
 ---
 
-### Forgot password
+## Forgot Password
 
-POST
+### POST
 
 ```text
-/auth/forgot-password
+/auth/author/forgot-password
 ```
 
 Body:
 
 ```json
 {
-  "email": "priya.sharma@email.com",
+  "email": "author@test.com",
   "new_password": "123456",
   "confirm_password": "123456"
 }
@@ -171,48 +418,178 @@ Body:
 
 ---
 
-## Response Format
+## Admin Login
 
-All APIs return standardized JSON response:
+### POST
+
+```text
+/auth/admin/login
+```
+
+Body:
 
 ```json
 {
-  "success": true,
-  "code": 200,
-  "message": "",
-  "data": {},
-  "error": null
+  "email": "admin@test.com",
+  "password": "admin123"
 }
 ```
 
 ---
 
-## Planned Modules
+# Books APIs
 
-- Author books dashboard
-- Support ticket creation
-- Ticket messages
-- Admin ticket management
-- AI categorization
-- Internal notes
-- Reopen ticket support
+## Fetch Author Books
+
+### GET
+
+```text
+/author/book/list?author_id=
+```
+
+---
+
+# Ticket APIs
+
+## Create Ticket
+
+### POST
+
+```text
+/ticket/create
+```
 
 ---
 
-## Development Notes
+## Fetch Author Tickets
 
-Architecture used:
+### GET
 
-Feature-based modular backend.
-
-Layers:
-
-- Routes → API endpoints
-- Service → business logic
-- Repository → database queries
-
-Flow:
-
-Frontend → Route → Service → Repository → PostgreSQL
+```text
+/ticket/author/list?author_id=
+```
 
 ---
+
+## Fetch Ticket Messages
+
+### GET
+
+```text
+/ticket/messages?ticket_code=
+```
+
+---
+
+## Send Ticket Message
+
+### POST
+
+```text
+/ticket/message/send
+```
+
+---
+
+# Admin APIs
+
+## Fetch All Tickets
+
+### GET
+
+```text
+/admin/tickets
+```
+
+---
+
+## Update Ticket Status
+
+### PUT
+
+```text
+/admin/ticket/status
+```
+
+---
+
+# Standard API Response Format
+
+All APIs return standardized JSON responses.
+
+Example:
+
+```json
+{
+  "success": true,
+  "code": 200,
+  "message": "Success",
+  "data": {},
+  "error": null
+}
+```
+
+
+# Known Limitations
+
+- JWT/session token authentication not implemented yet
+- Polling used instead of WebSockets
+- Basic session handling
+- No notification system yet
+
+---
+
+# Future Improvements
+
+- JWT/session token Authentication
+- Role-based authorization
+- WebSocket real-time updates
+- Redis caching
+- Notification system
+- File upload optimization
+- Docker support
+- CI/CD pipeline
+- Advanced filtering/search
+- Analytics dashboard
+- AI-powered ticket categorization
+- AI-generated admin reply suggestions
+
+---
+
+# Development Notes
+
+## Design Decisions
+
+- FastAPI chosen for speed and automatic OpenAPI documentation
+- PostgreSQL chosen for relational consistency
+- Railway used for backend/database deployment
+- Feature-based architecture improves scalability
+- Zustand used on frontend for lightweight session management
+
+---
+
+# Tradeoffs
+
+- Polling used instead of WebSockets for simplicity
+- Focused on core functionality over advanced animations
+- Lightweight authentication used for MVP assignment scope
+
+---
+
+# Production Improvements
+
+If evolving this project further into production:
+
+- Implement JWT refresh token flow
+- Add RBAC authorization
+- Introduce Docker containers
+- Add Redis queues/caching
+- Move to WebSocket-based live messaging
+- Add centralized logging and monitoring
+- Add automated testing and CI/CD
+
+
+
+---
+
+Built as part of the BookLeafPub Full Stack Assignment.

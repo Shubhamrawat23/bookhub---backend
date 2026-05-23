@@ -90,30 +90,28 @@ def fetch_authors_tkt(author_id="all", status_filter="", category_filter="", pri
 
     if (author_id.lower()) == "all" or author_id == "" or author_id == None:
         if status_filter != "":
-            filters.append('status = %s')
+            filters.append('t.status = %s')
             filter_val.append(status_filter)
 
         if category_filter != "":
-            filters.append('category = %s')
+            filters.append('t.category = %s')
             filter_val.append(category_filter)
 
         if priority_filter != "":
-            filters.append('priority = %s')
+            filters.append('t.priority = %s')
             filter_val.append(priority_filter)
 
         if start_date_tz != "":
-            filters.append('created_at >= %s')
+            filters.append('t.created_at >= %s')
             filter_val.append(start_date_tz)
 
         if end_date_tz != "":
-            filters.append('created_at < %s')
+            filters.append('t.created_at < %s')
             filter_val.append(end_date_tz)
 
         filters_where = f"WHERE {' AND '.join(filters)}" if filters else ""
 
         cur.execute(f"SELECT t.*, a.name, b.title FROM query_tickets t LEFT JOIN authors a ON a.author_id = t.author_id LEFT JOIN books b ON b.book_id = t.book_id {filters_where} ORDER BY id DESC;", tuple(filter_val))
-        last_query = cur.query.decode('utf-8')
-        print(last_query)
     else:
         cur.execute(
             """

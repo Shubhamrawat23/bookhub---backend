@@ -1,7 +1,7 @@
-from fastapi import APIRouter, Form, File, UploadFile, Query
+from fastapi import APIRouter, Form, File, UploadFile, Query, Depends
 from app.modules.tickets.tkt_service import create_tkt, tkts_listing, chat_history, save_chat_history, save_admin_actions, tktDetail_for_admin
 from app.modules.tickets.tkt_schemas import SaveMessage, TktActions
-from app.helper.helpers import check_admin
+from app.helper.helpers import check_admin, require_author
 
 tkt_router = APIRouter()
 
@@ -26,7 +26,7 @@ def author_create_tkt_route(
         return response
 
 @tkt_router.get("/author/list")
-def tkts_author_route(author_id: str = Query(...)):
+def tkts_author_route(current_user: str= Depends(require_author)):
         response = {
             "success": True,
             "code": 200,
@@ -35,16 +35,16 @@ def tkts_author_route(author_id: str = Query(...)):
             "error": None
         }
 
-        if author_id == "all":
-            response['success'] = False
-            response['code'] = 401
-            response['message'] = "Unautherized Access"
-            response['error'] = {
-                    "field":"author_id"
-            }
-            return response
+        # if author_id == "all":
+        #     response['success'] = False
+        #     response['code'] = 401
+        #     response['message'] = "Unautherized Access"
+        #     response['error'] = {
+        #             "field":"author_id"
+        #     }
+        #     return response
         
-        response = tkts_listing(author_id)
+        # response = tkts_listing(author_id)
         return response
 
 @tkt_router.get("/author/tkt_chat")

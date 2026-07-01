@@ -2,7 +2,7 @@ from app.db.db_connection import db_connection
 from dotenv import load_dotenv
 import os
 import jwt
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from fastapi.security import OAuth2PasswordBearer
 from fastapi import Depends
 from fastapi import HTTPException
@@ -43,7 +43,7 @@ def check_admin(admin_id):
 # generate jwt after successful login
 def generate_token(user_id,role):
 
-    expiry_date = datetime.now() + timedelta(minutes=60)
+    expiry_date = datetime.now(timezone.utc) + timedelta(minutes=60)
     token = jwt.encode({"id":user_id, "role":role, "exp":expiry_date}, os.getenv('SECRET_KEY'), 'HS256')
 
     return token

@@ -177,16 +177,16 @@ def save_chat_history(data):
         "data": {},
         "error": None
     }
-
-    if data.sender_type.lower() == "author":
-        is_author_exists = check_author(data.sender_id)
+    print(data)
+    if data['sender_type'].lower() == "author":
+        is_author_exists = check_author(data['sender_id'])
         if not is_author_exists:
             response['message'] = "Unautherized Access"
             response['code'] = 401
             response['success'] = False
             return response
 
-    if not data.sender_id or data.sender_id == "":
+    if not data['sender_id'] or data['sender_id'] == "":
         response['success'] = False
         response['code'] = 400
         response['message'] = "sender_id is missing. It can be author/admin"
@@ -195,7 +195,7 @@ def save_chat_history(data):
         }
         return response
     
-    if not data.ticket_code or data.ticket_code.strip() == "":
+    if not data['ticket_code'] or data['ticket_code'].strip() == "":
         response['success'] = False
         response['code'] = 400
         response['message'] = "Ticket Code is missing"
@@ -204,7 +204,7 @@ def save_chat_history(data):
         }
         return response
     
-    if not data.sender_type or data.sender_type.strip() == "":
+    if not data['sender_type'] or data['sender_type'].strip() == "":
         response['success'] = False
         response['code'] = 400
         response['message'] = "Sender type is missing. It can be author/admin"
@@ -213,7 +213,7 @@ def save_chat_history(data):
         }
         return response
 
-    res = save_chat(data.ticket_code, data.sender_id, data.sender_type, data.message)
+    res = save_chat(data['ticket_code'], data['sender_id'], data['sender_type'], data['message'])
 
     if not res:
         response['code'] = 422

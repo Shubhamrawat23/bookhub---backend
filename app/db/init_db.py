@@ -82,7 +82,6 @@ def create_tables():
                 1 = In Progress
                 2 = Resolved
                 3 = Closed
-                4 = Re Open
             */,
 
             -- PRIORITY (1=Critical, 2=High, 3=Medium, 4=Low)

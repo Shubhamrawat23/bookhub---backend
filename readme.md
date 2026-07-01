@@ -1,6 +1,6 @@
-# BookLeaf Assignment Backend
+# Bookhub Assignment Backend
 
-Backend service for the BookLeaf Author & Admin Support System built using FastAPI and PostgreSQL.
+Backend service for the Bookhub Author & Admin Support System built using FastAPI and PostgreSQL.
 
 ---
 
@@ -28,7 +28,7 @@ https://bookleafpub-backend-production.up.railway.app/docs
 
 ## Author Portal
 
-Email: priya.sharma@email.com  
+Email: sa001@email.com  
 Password: 123456
 
 #### Note: You can create/update new password for other authors also through forgot password (https://bookleafpub-frontend.vercel.app/author/forgot-password)
@@ -37,18 +37,18 @@ Password: 123456
 ## Admin Portal
 
 #### ADMIN 1
-Email: admin_00001@bookleafpub.com  
+Email: admin_00001@bookhub.com  
 Password: admin@123
 
 #### ADMIN 2
-Email: admin_00002@bookleafpub.com  
+Email: admin_00002@bookhub.com  
 Password: admin002@123
 
 ---
 
 # Project Overview
 
-This project is a support and management system for BookLeaf publishers.
+This project is a support and management system for Bookhub publishers.
 
 The platform includes:
 
@@ -307,7 +307,7 @@ uvicorn==0.47.0
 ## Create Database
 
 ```sql
-CREATE DATABASE bookleaf_db;
+CREATE DATABASE bookhub_db;
 ```
 
 ---
@@ -582,14 +582,7 @@ If evolving this project further into production:
 
 - Implement JWT refresh token flow
 - Add RBAC authorization
-- Introduce Docker containers
-- Add Redis queues/caching
-- Move to WebSocket-based live messaging
-- Add centralized logging and monitoring
-- Add automated testing and CI/CD
 
 
 
 ---
-
-Built as part of the BookLeafPub Full Stack Assignment.

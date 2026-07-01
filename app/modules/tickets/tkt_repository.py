@@ -111,7 +111,7 @@ def fetch_authors_tkt(author_id, role, status_filter="", category_filter="", pri
 
         filters_where = f"WHERE {' AND '.join(filters)}" if filters else ""
 
-        cur.execute(f"SELECT t.*, a.name, b.title FROM query_tickets t LEFT JOIN authors a ON a.author_id = t.author_id LEFT JOIN books b ON b.book_id = t.book_id {filters_where} ORDER BY id DESC;", tuple(filter_val))
+        cur.execute(f"SELECT t.*, a.name FROM query_tickets t LEFT JOIN authors a ON a.author_id = t.author_id {filters_where} ORDER BY id DESC;", tuple(filter_val))
     if(role.lower() == "author"):
         cur.execute(
             """

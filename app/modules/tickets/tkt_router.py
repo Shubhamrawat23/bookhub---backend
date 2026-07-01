@@ -7,7 +7,7 @@ tkt_router = APIRouter()
 
 @tkt_router.post("/author/create")
 def author_create_tkt_route(
-    author_id: str = Form(...),
+    author_id: str = Form(None),
     book_id: str = Form(...),
     subject: str = Form(...),
     description: str = Form(...),
@@ -27,7 +27,7 @@ def author_create_tkt_route(
         return response
 
 @tkt_router.get("/author/list")
-def tkts_author_route(current_user: str= Depends(require_author)):
+def tkts_author_route(current_user: str=Depends(require_author)):
         response = {
             "success": True,
             "code": 200,
@@ -45,11 +45,11 @@ def tkts_author_route(current_user: str= Depends(require_author)):
         #     }
         #     return response
         
-        response = tkts_listing(current_user['id'])
+        response = tkts_listing(current_user['id'], current_user['role'])
         return response
 
 @tkt_router.get("/author/tkt_chat")
-def tkt_chat_history_author_route(tkt_code: str = Query(...), access_by: str = Query(...), author_id: str = Query(...), current_user = Depends(require_author)):
+def tkt_chat_history_author_route(tkt_code: str = Query(...), access_by: str = Query(None), author_id: str = Query(None), current_user = Depends(require_author)):
         response = chat_history(tkt_code, current_user['role'], current_user['id'])
 
         return response
@@ -58,8 +58,8 @@ def tkt_chat_history_author_route(tkt_code: str = Query(...), access_by: str = Q
 def save_author_chat_history_route(data_msg: SaveMessage, current_user: str= Depends(require_author)):
 
         data = {
-               "ticket_code":data_msg['ticket_code'],
-               "message":data_msg['message'],
+               "ticket_code":data_msg.ticket_code,
+               "message":data_msg.message,
                "sender_id":current_user['id'],
                "sender_type":current_user['role']
         }
@@ -73,8 +73,8 @@ def save_author_chat_history_route(data_msg: SaveMessage, current_user: str= Dep
 
 @tkt_router.get("/admin/list")
 def tkts_admin_route(
-        author_id: str = Query(...), # send 'all'
-        admin_code: str = Query(...),
+        author_id: str = Query(None), # send 'all'
+        admin_code: str = Query(None),
         status_filter: str = Query(""), 
         category_filter: str = Query(""), 
         priority_filter: str = Query(""), 
@@ -106,7 +106,7 @@ def tkts_admin_route(
 
 # get chat history for admin
 @tkt_router.get("/admin/tkt_chat")
-def tkt_chat_history_admin_route(tkt_code: str = Query(...), access_by: str = Query(...),author_id: str = Query(...), current_user = Depends(require_admin)):
+def tkt_chat_history_admin_route(tkt_code: str = Query(...), access_by: str = Query(None),author_id: str = Query(None), current_user = Depends(require_admin)):
         
         # response = {
         #     "success": True,
@@ -125,7 +125,7 @@ def tkt_chat_history_admin_route(tkt_code: str = Query(...), access_by: str = Qu
         #     }
         #     return response
         
-        response = chat_history(tkt_code, current_user['role'], author_id)
+        response = chat_history(tkt_code, current_user['role'], current_user['id'])
         return response
 
 
@@ -134,8 +134,8 @@ def tkt_chat_history_admin_route(tkt_code: str = Query(...), access_by: str = Qu
 def save_admin_chat_history_route(data_msg: SaveMessage, current_user = Depends(require_admin)):
 
         data = {
-               "ticket_code":data_msg['ticket_code'],
-               "message":data_msg['message'],
+               "ticket_code":data_msg.ticket_code,
+               "message":data_msg.message,
                "sender_id":current_user['id'],
                "sender_type":current_user['role']
         }
@@ -153,6 +153,6 @@ def admin_actions_route(data: TktActions, current_user = Depends(require_admin))
 
 # get tkt data for admin
 @tkt_router.get('/admin/tkt_detail')
-def tktDetail_for_admin_route(admin_code: str | None, ticket_code:str, current_user: str = Depends(require_admin)):
+def tktDetail_for_admin_route(ticket_code:str, current_user: str = Depends(require_admin)):
        response = tktDetail_for_admin(ticket_code)
-       return responses
+       return response

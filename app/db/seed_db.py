@@ -97,8 +97,8 @@ def seed_database():
         ON CONFLICT (admin_id) DO NOTHING;
         """,
         (
-            "ADMIN0001", "ADMIN_00001", "admin_00001@bookleafpub.com", admin_hash_password,
-            "ADMIN0002", "ADMIN_00002", "admin_00002@bookleafpub.com", admin_hash_password_2
+            "ADMIN0001", "ADMIN_00001", "admin_00001@bookhub.com", admin_hash_password,
+            "ADMIN0002", "ADMIN_00002", "admin_00002@bookhub.com", admin_hash_password_2
         )
     )
 

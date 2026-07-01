@@ -118,6 +118,7 @@ def admin_login(data):
 
     admin_hash_password = hashlib.sha256(data.password.encode()).hexdigest()
 
+    print(data.email)
     resp = adminLogin(data.email)
     if not resp:
         response['success'] = False

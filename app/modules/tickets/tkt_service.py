@@ -68,7 +68,7 @@ def create_tkt(data, file):
     return response
 
 
-def tkts_listing(author_id, status_filter="", category_filter="", priority_filter="", start_date_tz="", end_date_tz=""):
+def tkts_listing(author_id, id_role, status_filter="", category_filter="", priority_filter="", start_date_tz="", end_date_tz=""):
     response = {
         "success": True,
         "code": 200,
@@ -77,25 +77,25 @@ def tkts_listing(author_id, status_filter="", category_filter="", priority_filte
         "error": None
     }
 
-    if not author_id or author_id == "":
-        response['success'] = False
-        response['code'] = 400
-        response['message'] = "Author id is missing"
-        response['error'] = {
-            "feild":"author_id"
-        }
-        return response
+    # if not author_id or author_id == "":
+    #     response['success'] = False
+    #     response['code'] = 400
+    #     response['message'] = "Author id is missing"
+    #     response['error'] = {
+    #         "feild":"author_id"
+    #     }
+    #     return response
 
-    if author_id.lower() != "all":
-        is_author_exists = check_author(author_id)
-        if not is_author_exists:
-            response['message'] = "Target Author Not Found"
-            response['code'] = 404
-            response['success'] = False
-            response['error'] = {"field": "author_id"}
-            return response
+    # if id_role.lower() != "author":
+    #     is_author_exists = check_author(author_id)
+    #     if not is_author_exists:
+    #         response['message'] = "Target Author Not Found"
+    #         response['code'] = 404
+    #         response['success'] = False
+    #         response['error'] = {"field": "author_id"}
+    #         return response
     
-    res = fetch_authors_tkt(author_id, status_filter, category_filter, priority_filter, start_date_tz, end_date_tz)
+    res = fetch_authors_tkt(author_id, id_role, status_filter, category_filter, priority_filter, start_date_tz, end_date_tz)
 
     if not res:
         response['success'] = False
@@ -127,21 +127,21 @@ def chat_history(tkt_code, access_by, author_id):
     #     }
     #     return response
 
-    if access_by == "author":
-        is_author_exists = check_author(author_id)
-        if not is_author_exists:
-            response['message'] = "Unautherized Access"
-            response['code'] = 401
-            response['success'] = False
-            return response
+    # if access_by == "author":
+    #     is_author_exists = check_author(author_id)
+    #     if not is_author_exists:
+    #         response['message'] = "Unautherized Access"
+    #         response['code'] = 401
+    #         response['success'] = False
+    #         return response
         
-    if access_by == "admin":
-        is_admin_exists = check_admin(author_id)
-        if not is_admin_exists:
-            response['message'] = "Unautherized Access"
-            response['code'] = 401
-            response['success'] = False
-            return response
+    # if access_by == "admin":
+    #     is_admin_exists = check_admin(author_id)
+    #     if not is_admin_exists:
+    #         response['message'] = "Unautherized Access"
+    #         response['code'] = 401
+    #         response['success'] = False
+    #         return response
     
     if not tkt_code or tkt_code.strip() == "":
         response['success'] = False
@@ -252,7 +252,7 @@ def save_admin_actions(data):
     response["data"] = res[0]
     return response
 
-def tktDetail_for_admin(admin_code, ticket_code):
+def tktDetail_for_admin(ticket_code):
     response = {
         "success": True,
         "code": 200,
@@ -261,12 +261,12 @@ def tktDetail_for_admin(admin_code, ticket_code):
         "error": None
     }
 
-    is_admin_exists = check_admin(admin_code)
-    if not is_admin_exists:
-        response['message'] = "Unautherized Access"
-        response['code'] = 401
-        response['success'] = False
-        return response
+    # is_admin_exists = check_admin(admin_id)
+    # if not is_admin_exists:
+    #     response['message'] = "Unautherized Access"
+    #     response['code'] = 401
+    #     response['success'] = False
+    #     return response
     
     res = fetch_tkt_data_for_admin(ticket_code)
 

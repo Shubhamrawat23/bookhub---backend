@@ -24,14 +24,14 @@ def check_author(author_id):
     con.close()
     return bool(res[0])
 
-def check_admin(admin_code):
+def check_admin(admin_id):
     con = db_connection()
     cur = con.cursor()
 
     cur.execute(
         """
-            SELECT EXISTS(SELECT 1 FROM admins WHERE admin_code = %s);
-        """, (admin_code,)
+            SELECT EXISTS(SELECT 1 FROM admins WHERE admin_id = %s);
+        """, (admin_id,)
     )
 
     res = cur.fetchone()
@@ -75,20 +75,37 @@ def get_current_user(token: str = Depends(OAuth_Schema)):
 
 def require_author(current_user = Depends(get_current_user)):
     
-    if current_user['roles'] != 'author':
+    print(current_user)
+    if current_user['role'] != 'author':
         raise HTTPException(
             status_code=403,
             detail="Unauthorized Access"
         )
+    
+    if current_user['id'] != "" and current_user['id'] is not None:
+        res = check_author(current_user['id'])
+        if not res:
+            raise HTTPException(
+                status_code=401,
+                detail=f'This user_id {current_user['id']} is no longer exists'
+            )
     
     return current_user
 
 def require_admin(current_user = Depends(get_current_user)):
     
-    if current_user['roles'] != 'admin':
+    if current_user['role'] != 'admin':
         raise HTTPException(
             status_code=403,
             detail="Unauthorized Access"
         )
+    
+    if current_user['id'] != "" and current_user['id'] is not None:
+        res = check_admin(current_user['id'])
+        if not res:
+            raise HTTPException(
+                status_code=401,
+                detail=f'This user_id {current_user['id']} is no longer exists'
+            )
     
     return current_user

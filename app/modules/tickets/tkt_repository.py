@@ -81,14 +81,14 @@ def save_converstion(ticket_code, sender_id, sender_type = "", message=""):
 
 
 # fetch all tkts list
-def fetch_authors_tkt(author_id="all", status_filter="", category_filter="", priority_filter="", start_date_tz="", end_date_tz=""):
+def fetch_authors_tkt(author_id, role, status_filter="", category_filter="", priority_filter="", start_date_tz="", end_date_tz=""):
     con = db_connection()
     cur = con.cursor(cursor_factory=RealDictCursor)
 
     filters = []
     filter_val = []
 
-    if (author_id.lower()) == "all" or author_id == "" or author_id == None:
+    if (role.lower() == "admin"):
         if status_filter != "":
             filters.append('t.status = %s')
             filter_val.append(status_filter)
@@ -112,7 +112,7 @@ def fetch_authors_tkt(author_id="all", status_filter="", category_filter="", pri
         filters_where = f"WHERE {' AND '.join(filters)}" if filters else ""
 
         cur.execute(f"SELECT t.*, a.name, b.title FROM query_tickets t LEFT JOIN authors a ON a.author_id = t.author_id LEFT JOIN books b ON b.book_id = t.book_id {filters_where} ORDER BY id DESC;", tuple(filter_val))
-    else:
+    if(role.lower() == "author"):
         cur.execute(
             """
                 SELECT id, ticket_code, subject, description, category, status, priority, attachment_url, created_at FROM query_tickets WHERE author_id = %s ORDER BY id DESC;

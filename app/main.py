@@ -10,7 +10,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:5173",
-    "https://bookhub-front-end.vercel.app/",
+    "https://bookhub-front-end.vercel.app"
 ]
 
 app.add_middleware(

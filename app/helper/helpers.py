@@ -51,6 +51,10 @@ def generate_token(user_id,role):
 
 OAuth_Schema = OAuth2PasswordBearer(tokenUrl='/login')
 
+import os
+import jwt
+from fastapi import Depends, HTTPException
+
 def get_current_user(token: str = Depends(OAuth_Schema)):
     try:
         payload = jwt.decode(
@@ -63,13 +67,25 @@ def get_current_user(token: str = Depends(OAuth_Schema)):
     except jwt.ExpiredSignatureError:
         raise HTTPException(
             status_code=401,
-            detail="Token expired"
+            detail={
+                "success": False,
+                "code": 401,
+                "message": "Authentication failed",
+                "data": {},
+                "error": "Token expired"
+            }
         )
 
     except jwt.InvalidTokenError:
         raise HTTPException(
             status_code=401,
-            detail="Invalid token"
+            detail={
+                "success": False,
+                "code": 401,
+                "message": "Authentication failed",
+                "data": {},
+                "error": "Invalid token"
+            }
         )
     
 

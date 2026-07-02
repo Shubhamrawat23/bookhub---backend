@@ -9,18 +9,18 @@ Backend service for the Bookhub Author & Admin Support System built using FastAP
 ## Frontend Application
 
 #### Author Login
-https://bookleafpub-frontend.vercel.app or https://bookleafpub-frontend.vercel.app/author/login
+https://bookhub-front-end.vercel.app or https://bookhub-front-end.vercel.app/author/login
 
 #### Admin Login
-https://bookleafpub-frontend.vercel.app/admin/login
+https://bookhub-front-end.vercel.app/admin/login
 
 ## Backend API Domian
 
-https://bookleafpub-backend-production.up.railway.app
+https://bookhub-back-end-production.up.railway.app
 
 ## Swagger API Documentation
 
-https://bookleafpub-backend-production.up.railway.app/docs
+https://bookhub-back-end-production.up.railway.app/docs
 
 ---
 
@@ -292,6 +292,7 @@ idna==3.15
 psycopg2-binary==2.9.12
 pydantic==2.13.4
 pydantic_core==2.46.4
+PyJWT==2.13.0
 python-dotenv==1.2.2
 python-multipart==0.0.29
 starlette==1.0.0
@@ -391,7 +392,7 @@ Body:
 
 ```json
 {
-  "email": "priya.sharma@email.com",
+  "email": "sa001@email.com",
   "password": "123456"
 }
 ```
@@ -430,8 +431,8 @@ Body:
 
 ```json
 {
-  "email": "admin@test.com",
-  "password": "admin123"
+  "email": "admin_00001@bookhub.com",
+  "password": "admin@123"
 }
 ```
 
@@ -543,14 +544,6 @@ Example:
 
 - JWT/session token Authentication
 - Role-based authorization
-- WebSocket real-time updates
-- Redis caching
-- Notification system
-- File upload optimization
-- Docker support
-- CI/CD pipeline
-- Advanced filtering/search
-- Analytics dashboard
 - AI-powered ticket categorization
 - AI-generated admin reply suggestions
 

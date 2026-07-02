@@ -31,6 +31,7 @@ def create_tkt(data, file):
     file_url = None
     tkt_count = check_tkt_existed(data['author_id']) or 0
 
+    # here :03d make sure how much digit it should make after include the tkt
     ticket_code = f"{data['author_id']}_TKT{tkt_count+1:03d}"
 
 
@@ -41,6 +42,7 @@ def create_tkt(data, file):
         name = re.sub(r'[^\w\-]', '_', name)
         clean_file_name = f"{name}{ext}"
 
+        # create folder path for saving file
         upload_dir = f"uploads/{data['author_id']}/{ticket_code}"
         os.makedirs(upload_dir, exist_ok=True)
 
@@ -48,8 +50,9 @@ def create_tkt(data, file):
 
         file_url = f"uploads/{data['author_id']}/{ticket_code}/{clean_file_name}"
 
+        # open the file path as in binary write mode and to access that path we can do that from f 
         with open(file_path, "wb") as f:
-            f.write(file.file.read())
+            f.write(file.file.read()) # read the data first from file then add in 'f' file
 
     res = entry_in_query_tkts(
         ticket_code,

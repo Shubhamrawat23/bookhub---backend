@@ -10,7 +10,7 @@ app = FastAPI()
 
 origins = [
     "http://localhost:5173",
-    "https://bookleafpub-frontend.vercel.app",
+    "https://bookhub-front-end.vercel.app/",
 ]
 
 app.add_middleware(
@@ -29,4 +29,4 @@ app.include_router(book_router, prefix="/author", tags=['Books'])
 
 # connect upload with main app
 os.makedirs("uploads", exist_ok=True) #when app run it will make upload folder
-app.mount('/uploads', StaticFiles(directory="uploads"), name="uploads")
+app.mount('/uploads', StaticFiles(directory="uploads"), name="uploads") #define url path to folder where '1 param' is the URL prefix means after domain it will start from there, '2 param' is for fastapi to fetch data from this local dirs as acc. to url and '3 param' is for fetch directly from name (as shortcut)

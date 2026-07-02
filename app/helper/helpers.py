@@ -67,7 +67,7 @@ def get_current_user(token: str = Depends(OAuth_Schema)):
     except jwt.ExpiredSignatureError:
         raise HTTPException(
             status_code=401,
-            detail={
+            content={
                 "success": False,
                 "code": 401,
                 "message": "Authentication failed",
@@ -79,7 +79,7 @@ def get_current_user(token: str = Depends(OAuth_Schema)):
     except jwt.InvalidTokenError:
         raise HTTPException(
             status_code=401,
-            detail={
+            content={
                 "success": False,
                 "code": 401,
                 "message": "Authentication failed",

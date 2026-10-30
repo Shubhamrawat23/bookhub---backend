@@ -20,7 +20,8 @@ def author_login_route(data: UserLogin, response: Response):
             value=token,
             httponly=True,
             secure=True,
-            max_age=3600
+            max_age=3600,
+            samesite="none"
         )
 
         del res['data']['access_token']
@@ -45,7 +46,8 @@ def admin_login_route(data: UserLogin, response: Response):
             value=token,
             httponly=True,
             secure=True,
-            max_age=3600
+            max_age=3600,
+            samesite="none"
         )
 
         del result['data']['access_token']
@@ -59,6 +61,7 @@ def user_logout(response: Response, current_user = Depends(helper.get_current_us
         path="/",
         secure=True,
         httponly=True,
+        samesite="none"
     )
     return {"success": True, "message": "Logged out successfully"}
 
@@ -69,6 +72,7 @@ def user_logout(response: Response, current_user = Depends(helper.get_current_us
         path="/",
         secure=True,
         httponly=True,
+        samesite="none"
     )
     return {"success": True, "message": "Logged out successfully"}
 

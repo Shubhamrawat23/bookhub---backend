@@ -31,7 +31,7 @@ https://bookhub-back-end-production.up.railway.app/docs
 Email: sa001@email.com  
 Password: 123456
 
-#### Note: You can create/update new password for other authors also through forgot password (https://bookleafpub-frontend.vercel.app/author/forgot-password)
+#### Note: You can create/update new password for other authors also through forgot password (https://bookhub-frontend.vercel.app/author/forgot-password)
 ---
 
 ## Admin Portal
@@ -56,7 +56,7 @@ The platform includes:
 - Admin Portal
 - Book Management
 - Support Ticket System
-- Ticket Chat System
+- Real-time Ticket Chat System (WebSockets)
 
 The backend exposes REST APIs using FastAPI and stores data using PostgreSQL.
 
@@ -72,8 +72,10 @@ The backend exposes REST APIs using FastAPI and stores data using PostgreSQL.
 - Pydantic
 - Uvicorn
 - psycopg2
+- PyJWT (JWT Authentication)
 - python-dotenv
 - python-multipart
+- WebSockets
 
 ---
 
@@ -83,7 +85,7 @@ The backend exposes REST APIs using FastAPI and stores data using PostgreSQL.
 - PostgreSQL hosted on Railway PostgreSQL
 - Frontend deployed on Vercel
 - Environment variables configured securely through Railway/Vercel dashboards
-- Configured CORS handling between Railway backend and Vercel frontend
+- Configured CORS handling between Railway backend and Vercel frontend (allows `credentials: true` for HttpOnly cookies)
 
 ---
 
@@ -157,7 +159,7 @@ Handles direct PostgreSQL database operations.
 ```text
 Frontend
    ↓
-FastAPI Routes
+FastAPI Routes (REST / WebSocket)
    ↓
 Schemas Layer
    ↓
@@ -172,7 +174,17 @@ PostgreSQL Database
 
 # Features Implemented
 
-## Authentication
+## Authentication & Security
+
+- HttpOnly Cookie Auth: JWT tokens are securely stored in HttpOnly, Secure, SameSite=None cookies (eliminates XSS token theft).
+
+- Role-Based Access Control (RBAC): Distinct require_admin and require_author dependencies.
+
+- WebSocket Auth: WebSocket connections are authenticated by reading the HttpOnly cookie during the handshake.
+
+- Global Exception Handling: All errors (Pydantic 422, HTTPExceptions, Internal 500s) return a unified, predictable JSON format for the frontend.
+
+
 
 ## Author Side
 
@@ -187,17 +199,16 @@ PostgreSQL Database
 - Password hashing using SHA256 (implemented for assignment MVP scope)
 - Admin ticket management
 
----
 
-# Book Management
+
+## Book Management
 
 - Fetch author books
 - Book metadata handling
 - Royalty information handling
 
----
 
-# Ticket Management
+## Ticket Management & Real-Time Chat
 
 - Create support tickets
 - Fetch author tickets
@@ -205,8 +216,18 @@ PostgreSQL Database
 - Ticket message/chat system
 - Admin ticket management
 - Ticket priority handling
+- Real-time WebSocket Chat: Live bi-directional messaging between Authors and Admins using a Room-based Connection Manager (ws_manager).
 
----
+## WebSocket Endpoints
+The chat system bypasses HTTP polling and uses persistent WebSocket connections.
+
+ - Author Chat: ws://domain/ticket/ws/author/chat/{ticket_code}
+
+ - Admin Chat: ws://domain/ticket/ws/admin/chat/{ticket_code}
+
+Note: Authentication is handled automatically by the browser via the HttpOnly cookie during the WebSocket handshake.
+
+
 
 # Database Structure
 
@@ -438,6 +459,18 @@ Body:
 
 ---
 
+## Get Current User
+
+### GET
+
+```text
+/auth/me
+```
+
+Reads HttpOnly cookie to return current logged-in user details (id, role, name).
+
+---
+
 # Books APIs
 
 ## Fetch Author Books
@@ -467,7 +500,7 @@ Body:
 ### GET
 
 ```text
-/ticket/author/list?author_id=
+/ticket/author/list
 ```
 
 ---
@@ -477,19 +510,8 @@ Body:
 ### GET
 
 ```text
-/ticket/messages?ticket_code=
+/ticket/messages?ticket_code={code}
 ```
-
----
-
-## Send Ticket Message
-
-### POST
-
-```text
-/ticket/message/send
-```
-
 ---
 
 # Admin APIs
@@ -533,17 +555,15 @@ Example:
 
 # Known Limitations
 
-- JWT/session token authentication not implemented yet
-- Polling used instead of WebSockets
-- Basic session handling
+- WebSocket Connection Manager is stored in-memory (requires Redis Pub/Sub for multi-server scaling).
 - No notification system yet
 
 ---
 
 # Future Improvements
 
-- JWT/session token Authentication
-- Role-based authorization
+- Refresh Token rotation for extended sessions.
+- Redis Pub/Sub for horizontally scaling WebSockets.
 - AI-powered ticket categorization
 - AI-generated admin reply suggestions
 
@@ -563,9 +583,11 @@ Example:
 
 # Tradeoffs
 
-- Polling used instead of WebSockets for simplicity
-- Focused on core functionality over advanced animations
-- Lightweight authentication used for MVP assignment scope
+- WebSockets chosen over polling for real-time chat to improve UX and reduce server load, at the cost of needing to manage persistent connections.
+
+- Focused on core functionality over advanced animations.
+
+
 
 ---
 
@@ -573,8 +595,8 @@ Example:
 
 If evolving this project further into production:
 
-- Implement JWT refresh token flow
-- Add RBAC authorization
+- Implement Database Migrations (Alembic) instead of raw init scripts.
+- Add Redis for WebSocket message brokering.
 
 
 

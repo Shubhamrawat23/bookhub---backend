@@ -1,9 +1,67 @@
-from fastapi import APIRouter, Form, File, UploadFile, Query, Depends
+from fastapi import APIRouter, Form, File, UploadFile, Query, Depends, WebSocket, WebSocketDisconnect
 from app.modules.tickets.tkt_service import create_tkt, tkts_listing, chat_history, save_chat_history, save_admin_actions, tktDetail_for_admin
 from app.modules.tickets.tkt_schemas import SaveMessage, TktActions
 from app.helper.helpers import check_admin, require_author, require_admin
+import json
+from fastapi.encoders import jsonable_encoder
 
 tkt_router = APIRouter()
+
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: dict[str, list[WebSocket]] = {}
+
+    async def connect(self, tkt_code: str, websocket: WebSocket):
+        await websocket.accept()
+        if tkt_code not in self.active_connections:
+              self.active_connections[tkt_code] = []
+        self.active_connections[tkt_code].append(websocket)
+
+    def disconnect(self,tkt_code: str, websocket: WebSocket):
+        if tkt_code in self.active_connections:
+                if websocket in self.active_connections[tkt_code]:
+                    self.active_connections[tkt_code].remove(websocket)
+        if not self.active_connections[tkt_code]:
+            del self.active_connections[tkt_code]
+
+    async def broadcast(self, tkt_code: str, message: str):
+        if tkt_code in self.active_connections:
+            for connection in self.active_connections[tkt_code]:
+                await connection.send_text(message)
+
+ws_manager = ConnectionManager()
+
+async def handle_chat_session(websocket: WebSocket, ticket_code: str, current_user: dict):
+    await ws_manager.connect(ticket_code, websocket)
+    try:
+        while True:
+            data = await websocket.receive_json()
+            msg = data.get("message")
+            
+            if not msg:
+                continue
+
+            db_data = {
+                "ticket_code": ticket_code,
+                "message": msg,
+                "sender_id": current_user['id'],
+                "sender_type": current_user['role']
+            }
+            
+            response = save_chat_history(db_data)
+
+            if response['success']:
+                payload = {
+                    "id": response['data']['id'],
+                    "sender_type": current_user['role'],
+                    "sender": current_user['name'],
+                    "message": msg,
+                    "created_at": response['data']['created_at']
+                }
+                await ws_manager.broadcast(ticket_code, json.dumps(jsonable_encoder(payload)))
+                
+    except WebSocketDisconnect:
+        ws_manager.disconnect(ticket_code, websocket)
 
 @tkt_router.post("/author/create")
 def author_create_tkt_route(
@@ -54,18 +112,11 @@ def tkt_chat_history_author_route(tkt_code: str = Query(...), access_by: str = Q
 
         return response
 
-@tkt_router.post("/author/save_message")
-def save_author_chat_history_route(data_msg: SaveMessage, current_user: str= Depends(require_author)):
 
-        data = {
-               "ticket_code":data_msg.ticket_code,
-               "message":data_msg.message,
-               "sender_id":current_user['id'],
-               "sender_type":current_user['role']
-        }
-        response = save_chat_history(data)
-
-        return response
+# add websocket for author chat 
+@tkt_router.websocket("/ws/author/chat")
+async def save_author_chat_history_route(websocket: WebSocket, ticket_code: str, current_user: str= Depends(require_author)):
+        await handle_chat_session(websocket, ticket_code, current_user)
 
 
 
@@ -129,20 +180,10 @@ def tkt_chat_history_admin_route(tkt_code: str = Query(...), access_by: str = Qu
         return response
 
 
-# save admin chat
-@tkt_router.post("/admin/save_message")
-def save_admin_chat_history_route(data_msg: SaveMessage, current_user = Depends(require_admin)):
-
-        data = {
-               "ticket_code":data_msg.ticket_code,
-               "message":data_msg.message,
-               "sender_id":current_user['id'],
-               "sender_type":current_user['role']
-        }
-        print(data)
-        response = save_chat_history(data)
-
-        return response
+# add websocket admin chat
+@tkt_router.websocket("/ws/admin/chat")
+async def save_admin_chat_history_route(websocket: WebSocket, ticket_code: str, current_user = Depends(require_admin)):
+    await handle_chat_session(websocket, ticket_code, current_user)
 
 # save admin actions
 

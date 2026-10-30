@@ -3,8 +3,7 @@ from dotenv import load_dotenv
 import os
 import jwt
 from datetime import datetime, timedelta, timezone
-from fastapi.security import OAuth2PasswordBearer
-from fastapi import Depends, HTTPException
+from fastapi import Depends, HTTPException, Request, WebSocket
 
 load_dotenv()
 
@@ -14,14 +13,14 @@ def check_author(author_id):
 
     cur.execute(
         """
-            SELECT EXISTS(SELECT 1 FROM authors WHERE author_id = %s);
+            SELECT name FROM authors WHERE author_id = %s;
         """, (author_id,)
     )
 
     res = cur.fetchone()
     cur.close()
     con.close()
-    return bool(res[0])
+    return res[0]
 
 def check_admin(admin_id):
     con = db_connection()
@@ -29,14 +28,14 @@ def check_admin(admin_id):
 
     cur.execute(
         """
-            SELECT EXISTS(SELECT 1 FROM admins WHERE admin_id = %s);
+            SELECT name FROM admins WHERE admin_id = %s;
         """, (admin_id,)
     )
 
     res = cur.fetchone()
     cur.close()
     con.close()
-    return bool(res[0])
+    return res[0]
 
 
 # generate jwt after successful login
@@ -47,10 +46,31 @@ def generate_token(user_id,role):
 
     return token
 
+def get_current_user(request: Request= None, websocket: WebSocket = None):
+    token = None
+    cookies = {}
 
-OAuth_Schema = OAuth2PasswordBearer(tokenUrl='/login')
+    if request:
+        cookies = request.cookies
+    elif websocket:
+        cookies = websocket.cookies
 
-def get_current_user(token: str = Depends(OAuth_Schema)):
+    if 'access_token_admin' in cookies:
+        token = cookies['access_token_admin']
+    elif 'access_token_author' in cookies:
+        token = cookies['access_token_author']
+
+    if not token:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "success": False,
+                "code": 401,
+                "data": {},
+                "message": "Authentication failed",
+                "error": "Not authenticated"
+            }
+        )
     try:
         payload = jwt.decode(
             token,
@@ -86,11 +106,16 @@ def get_current_user(token: str = Depends(OAuth_Schema)):
 
 def require_author(current_user = Depends(get_current_user)):
     
-    print(current_user)
     if current_user['role'] != 'author':
         raise HTTPException(
             status_code=403,
-            detail="Unauthorized Access"
+            detail={
+                "success": False,
+                "code": 403,
+                "message": "Autherization failed",
+                "data": {},
+                "error": "Unauthorized Access"
+            }
         )
     
     if current_user['id'] != "" and current_user['id'] is not None:
@@ -98,8 +123,15 @@ def require_author(current_user = Depends(get_current_user)):
         if not res:
             raise HTTPException(
                 status_code=401,
-                detail=f'This user_id {current_user['id']} is no longer exists'
+                detail={
+                    "success": False,
+                    "code": 401,
+                    "message": "Authentication failed",
+                    "data": {},
+                    "error": f'This user_id {current_user['id']} is no longer exists'
+                }
             )
+        current_user['name'] = res
     
     return current_user
 
@@ -108,7 +140,13 @@ def require_admin(current_user = Depends(get_current_user)):
     if current_user['role'] != 'admin':
         raise HTTPException(
             status_code=403,
-            detail="Unauthorized Access"
+            detail={
+                "success": False,
+                "code": 403,
+                "message": "Autherization failed",
+                "data": {},
+                "error": "Unauthorized Access"
+            }
         )
     
     if current_user['id'] != "" and current_user['id'] is not None:
@@ -116,7 +154,14 @@ def require_admin(current_user = Depends(get_current_user)):
         if not res:
             raise HTTPException(
                 status_code=401,
-                detail=f'This user_id {current_user['id']} is no longer exists'
+                detail={
+                    "success": False,
+                    "code": 401,
+                    "message": "Authentication failed",
+                    "data": {},
+                    "error": f'This user_id {current_user['id']} is no longer exists'
+                }
             )
+        current_user['name'] = res
     
     return current_user

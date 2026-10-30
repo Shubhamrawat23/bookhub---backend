@@ -223,6 +223,10 @@ def save_chat_history(data):
         response['message'] = "Unbale to save chat"
 
     response['message'] = f"Message is saved with id {res[0]}"
+    response['data'] = {
+        "id": res[0],
+        "created_at": res[1],
+    }
     return response
 
 

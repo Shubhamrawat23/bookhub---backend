@@ -158,16 +158,16 @@ def save_chat(ticket_code, sender_id, sender_type="", message=""):
             sender_id,
             sender_type,
             message
-            ) VALUES (%s, %s, %s, %s) RETURNING id;
+            ) VALUES (%s, %s, %s, %s) RETURNING id, created_at;
         """, (ticket_code, sender_id, sender_type, message)
     )
-    id = cur.fetchone()
+    data = cur.fetchone()
     con.commit()
 
     cur.close()
     con.close()
 
-    return id
+    return data
     
 
 # Update the action for admin

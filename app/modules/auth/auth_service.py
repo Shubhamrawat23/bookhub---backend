@@ -55,7 +55,6 @@ def author_login(data):
         "email": resp[2],
         "phone": resp[3],
         "access_token":token,
-        "token_type":'bearer'
     }
     return response
 
@@ -148,6 +147,6 @@ def admin_login(data):
         "name": resp[2],
         "email": resp[3],
         "access_token":token,
-        "token_type":'bearer'
+        
     }
     return response

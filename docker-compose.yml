@@ -1,0 +1,55 @@
+volumes:
+  bookhub_vol:
+    name: bookhub_vol
+
+services:
+  bookhub_db:
+    image: postgres:18-alpine
+    restart: always
+    container_name: bookhub_db_cont
+    networks:
+      - bookhub_net
+    environment:
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - 'bookhub_vol:/var/lib/postgresql/data'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  init_db_seed_db:
+    build: .
+    restart: no
+    depends_on:
+      bookhub_db:
+        condition: service_healthy
+    environment:
+      DB_HOST: bookhub_db
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_PORT: 5432
+    command: sh -c "python -m app.db.init_db && python -m app.db.seed_db"
+    networks:
+      - bookhub_net
+    
+  backend:
+    container_name: 'bookhub_back_cont'
+    restart: always
+    build: . 
+    depends_on:
+      init_db_seed_db:
+        condition: service_completed_successfully
+    environment:
+      DB_HOST: bookhub_db
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      DB_PORT: 5432
+    networks:
+      - bookhub_net # this will be created in VPS directly coz every compose file create own isolated n/w and that can't be access to by other compose file

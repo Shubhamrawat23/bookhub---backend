@@ -1,0 +1,8 @@
+.env
+.venv
+.gitignore
+__pycache__
+*.pyc
+uploads/
+architectureflow.png
+Procfile

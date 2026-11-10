@@ -2,14 +2,17 @@ volumes:
   bookhub_vol:
     name: bookhub_vol
 
+networks:
+  bookhub_net:
+    external: true
+
 services:
   bookhub_db:
     image: postgres:18-alpine
     restart: always
     container_name: bookhub_db_cont
     networks:
-      bookhub_net:
-        external: true
+      - bookhub_net
     environment:
       PGDATA: /var/lib/postgresql/data
       POSTGRES_DB: ${POSTGRES_DB}
@@ -37,8 +40,7 @@ services:
       DB_PORT: 5432
     command: sh -c "python -m app.db.init_db && python -m app.db.seed_db"
     networks:
-      bookhub_net:
-        external: true
+      - bookhub_net
     
   backend:
     container_name: 'bookhub_back_cont'
@@ -54,5 +56,4 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_PORT: 5432
     networks:
-      bookhub_net:
-        external: true # this will be created in VPS directly coz every compose file create own isolated n/w and that can't be access to by other compose file
+      - bookhub_net # this will be created in VPS directly coz every compose file create own isolated n/w and that can't be access to by other compose file

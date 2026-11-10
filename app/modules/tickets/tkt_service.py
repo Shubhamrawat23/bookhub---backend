@@ -68,6 +68,8 @@ def create_tkt(data, file):
         msg_id = save_converstion(res[0], data['author_id'], "author", data['description'])
     
     response['message'] = "Your ticket is generated with ticket code = " + res[0]
+
+    response['data'] = {"ticket_code": ticket_code}
     return response
 
 

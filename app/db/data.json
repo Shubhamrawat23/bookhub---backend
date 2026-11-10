@@ -2,15 +2,15 @@
   "authors": [
     {
       "author_id": "AUTH001",
-      "name": "Priya Sharma",
-      "email": "priya.sharma@email.com",
-      "phone": "+91-98765-43210",
+      "name": "sa",
+      "email": "sa@email.com",
+      "phone": "+91-98765-43221",
       "city": "Mumbai",
       "joined_date": "2023-03-15",
       "books": [
         {
           "book_id": "BK001",
-          "title": "Whispers of the Ganges",
+          "title": "WOTG",
           "isbn": "978-93-5XXXX-01-1",
           "genre": "Literary Fiction",
           "publication_date": "2023-06-20",
@@ -27,7 +27,7 @@
         },
         {
           "book_id": "BK002",
-          "title": "The Saffron Diaries",
+          "title": "The SD",
           "isbn": "978-93-5XXXX-02-8",
           "genre": "Non-Fiction / Memoir",
           "publication_date": "2024-01-10",
@@ -46,15 +46,15 @@
     },
     {
       "author_id": "AUTH002",
-      "name": "Rohit Kapoor",
-      "email": "rohit.kapoor@email.com",
-      "phone": "+91-87654-32109",
+      "name": "R Kapoor",
+      "email": "rk12@email.com",
+      "phone": "+91-87654-49678",
       "city": "Delhi",
       "joined_date": "2022-11-08",
       "books": [
         {
           "book_id": "BK003",
-          "title": "Code & Karma",
+          "title": "Codex & Kax",
           "isbn": "978-93-5XXXX-03-5",
           "genre": "Self-Help / Technology",
           "publication_date": "2023-02-14",
@@ -71,7 +71,7 @@
         },
         {
           "book_id": "BK004",
-          "title": "Startup Sutra",
+          "title": "Sutray",
           "isbn": "978-93-5XXXX-04-2",
           "genre": "Business / Entrepreneurship",
           "publication_date": "2024-05-22",
@@ -90,15 +90,15 @@
     },
     {
       "author_id": "AUTH003",
-      "name": "Ananya Reddy",
-      "email": "ananya.reddy@email.com",
-      "phone": "+91-76543-21098",
+      "name": "Reddy San",
+      "email": "SR@email.com",
+      "phone": "+91-76543-25399",
       "city": "Hyderabad",
       "joined_date": "2024-02-20",
       "books": [
         {
           "book_id": "BK005",
-          "title": "Between Two Temples",
+          "title": "Between Templares",
           "isbn": "978-93-5XXXX-05-9",
           "genre": "Historical Fiction",
           "publication_date": "2024-07-05",
@@ -117,15 +117,15 @@
     },
     {
       "author_id": "AUTH004",
-      "name": "Vikram Joshi",
-      "email": "vikram.joshi@email.com",
-      "phone": "+91-65432-10987",
+      "name": "Vity",
+      "email": "vi@email.com",
+      "phone": "+91-65432-10101",
       "city": "Pune",
       "joined_date": "2023-07-12",
       "books": [
         {
           "book_id": "BK006",
-          "title": "Debugging Life",
+          "title": "Lifes",
           "isbn": "978-93-5XXXX-06-6",
           "genre": "Self-Help",
           "publication_date": "2023-11-30",
@@ -142,7 +142,7 @@
         },
         {
           "book_id": "BK007",
-          "title": "The Last Monsoon",
+          "title": "The Last",
           "isbn": "978-93-5XXXX-07-3",
           "genre": "Poetry",
           "publication_date": "2024-08-15",
@@ -161,15 +161,15 @@
     },
     {
       "author_id": "AUTH005",
-      "name": "Meera Nair",
-      "email": "meera.nair@email.com",
-      "phone": "+91-54321-09876",
+      "name": "Nair",
+      "email": "m.nair@email.com",
+      "phone": "+91-54321-09098",
       "city": "Kochi",
       "joined_date": "2023-01-05",
       "books": [
         {
           "book_id": "BK008",
-          "title": "Cardamom & Chaos",
+          "title": "C & Cx",
           "isbn": "978-93-5XXXX-08-0",
           "genre": "Contemporary Fiction",
           "publication_date": "2023-04-18",
@@ -186,7 +186,7 @@
         },
         {
           "book_id": "BK009",
-          "title": "Letters from Lakshadweep",
+          "title": "Letters(L)",
           "isbn": "978-93-5XXXX-09-7",
           "genre": "Travel / Non-Fiction",
           "publication_date": "2024-03-01",
@@ -205,15 +205,15 @@
     },
     {
       "author_id": "AUTH006",
-      "name": "Arjun Malhotra",
-      "email": "arjun.malhotra@email.com",
-      "phone": "+91-43210-98765",
+      "name": "Arun Ma",
+      "email": "arun.ma@email.com",
+      "phone": "+91-43210-77765",
       "city": "Chandigarh",
       "joined_date": "2024-06-01",
       "books": [
         {
           "book_id": "BK010",
-          "title": "Turban Tales",
+          "title": "T Tales",
           "isbn": "978-93-5XXXX-10-3",
           "genre": "Humor / Essays",
           "publication_date": "2024-09-10",
@@ -232,15 +232,15 @@
     },
     {
       "author_id": "AUTH007",
-      "name": "Sneha Kulkarni",
-      "email": "sneha.kulkarni@email.com",
-      "phone": "+91-32109-87654",
+      "name": "Sun Kul",
+      "email": "s.k@email.com",
+      "phone": "+91-32109-87777",
       "city": "Bangalore",
       "joined_date": "2022-09-18",
       "books": [
         {
           "book_id": "BK011",
-          "title": "The Algorithm of Love",
+          "title": "The Algo",
           "isbn": "978-93-5XXXX-11-0",
           "genre": "Romance",
           "publication_date": "2022-12-25",
@@ -257,7 +257,7 @@
         },
         {
           "book_id": "BK012",
-          "title": "Ctrl+Alt+Delete My Ex",
+          "title": "Ex(X)",
           "isbn": "978-93-5XXXX-12-7",
           "genre": "Romance / Humor",
           "publication_date": "2024-02-14",
@@ -274,7 +274,7 @@
         },
         {
           "book_id": "BK013",
-          "title": "Midnight in Mysore",
+          "title": "M in M",
           "isbn": "978-93-5XXXX-13-4",
           "genre": "Thriller",
           "publication_date": null,
@@ -293,15 +293,15 @@
     },
     {
       "author_id": "AUTH008",
-      "name": "Farhan Sheikh",
-      "email": "farhan.sheikh@email.com",
-      "phone": "+91-21098-76543",
+      "name": "Faruk Sanam",
+      "email": "f.s@email.com",
+      "phone": "+91-21098-75545",
       "city": "Lucknow",
       "joined_date": "2023-10-01",
       "books": [
         {
           "book_id": "BK014",
-          "title": "Ghazal of the Forgotten",
+          "title": "G the Forgotten",
           "isbn": "978-93-5XXXX-14-1",
           "genre": "Poetry / Urdu Literature",
           "publication_date": "2024-01-26",
@@ -320,15 +320,15 @@
     },
     {
       "author_id": "AUTH009",
-      "name": "Kavita Deshmukh",
-      "email": "kavita.deshmukh@email.com",
-      "phone": "+91-10987-65432",
+      "name": "Kavita P",
+      "email": "kp@email.com",
+      "phone": "+91-10987-63332",
       "city": "Nagpur",
       "joined_date": "2024-04-10",
       "books": [
         {
           "book_id": "BK015",
-          "title": "Raising Roots",
+          "title": "RR",
           "isbn": "978-93-5XXXX-15-8",
           "genre": "Parenting / Non-Fiction",
           "publication_date": null,
@@ -345,7 +345,7 @@
         },
         {
           "book_id": "BK016",
-          "title": "The Nagpur Notebooks",
+          "title": "The Nagpur",
           "isbn": "978-93-5XXXX-16-5",
           "genre": "Essays / Memoir",
           "publication_date": "2024-11-05",
@@ -364,15 +364,15 @@
     },
     {
       "author_id": "AUTH010",
-      "name": "Diya Chatterjee",
-      "email": "diya.chatterjee@email.com",
-      "phone": "+91-09876-54321",
+      "name": "DC",
+      "email": "d.c@email.com",
+      "phone": "+91-09876-50321",
       "city": "Kolkata",
       "joined_date": "2023-05-22",
       "books": [
         {
           "book_id": "BK017",
-          "title": "Durga\u2019s Daughters",
+          "title": "DC Daughters",
           "isbn": "978-93-5XXXX-17-2",
           "genre": "Literary Fiction",
           "publication_date": "2023-10-15",
@@ -389,7 +389,7 @@
         },
         {
           "book_id": "BK018",
-          "title": "Howrah Nights",
+          "title": "My Nits",
           "isbn": "978-93-5XXXX-18-9",
           "genre": "Crime / Thriller",
           "publication_date": "2025-01-20",

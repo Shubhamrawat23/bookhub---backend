@@ -4,6 +4,7 @@ from app.modules.tickets.tkt_schemas import SaveMessage, TktActions
 from app.helper.helpers import check_admin, require_author, require_admin
 import json
 from fastapi.encoders import jsonable_encoder
+from starlette.concurrency import run_in_threadpool
 
 tkt_router = APIRouter()
 
@@ -47,8 +48,8 @@ async def handle_chat_session(websocket: WebSocket, ticket_code: str, current_us
                 "sender_id": current_user['id'],
                 "sender_type": current_user['role']
             }
-            
             response = save_chat_history(db_data)
+            # response = await run_in_threadpool(save_chat_history, db_data)
 
             if response['success']:
                 payload = {

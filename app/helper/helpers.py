@@ -128,7 +128,7 @@ def require_author(current_user = Depends(get_current_user)):
                     "code": 401,
                     "message": "Authentication failed",
                     "data": {},
-                    "error": f'This user_id {current_user['id']} is no longer exists'
+                    "error": f"This user_id {current_user['id']} is no longer exists"
                 }
             )
         current_user['name'] = res
@@ -159,7 +159,7 @@ def require_admin(current_user = Depends(get_current_user)):
                     "code": 401,
                     "message": "Authentication failed",
                     "data": {},
-                    "error": f'This user_id {current_user['id']} is no longer exists'
+                    "error": f"This user_id {current_user['id']} is no longer exists"
                 }
             )
         current_user['name'] = res

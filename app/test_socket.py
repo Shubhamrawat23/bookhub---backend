@@ -36,32 +36,6 @@ def create_tkt(client):
     assert ticket_code is not None, f"Could not get ticket code = {resp_data}"
     yield ticket_code
 
-# def test_websockets_connects_and_sends(client, create_tkt):    
-#     ticket_code = create_tkt
-
-#     with client.websocket_connect(f"/ticket/ws/author/chat?ticket_code={ticket_code}") as author_ws:
-#         with client.websocket_connect(f"/ticket/ws/admin/chat?ticket_code={ticket_code}") as admin_ws:
-        
-#             # author send msg
-#             author_ws.send_json({"message": "Hello admin"})
-#             admin_data = admin_ws.receive_json()
-            
-#             assert admin_data["message"] == "Hello admin"
-#             assert admin_data["sender"] == "Test Author"
-
-#             author_own_broadcast = author_ws.receive_json()
-#             assert author_own_broadcast["message"] == "Hello admin"
-
-#             # admin send msg
-#             admin_ws.send_json({"message": "Hello from Admin"})
-#             author_data = author_ws.receive_json()
-
-#             assert author_data['message'] == "Hello from Admin"
-#             assert author_data['sender'] == "Test Admin"
-
-#             admin_own_broadcast = admin_ws.receive_json()
-#             assert admin_own_broadcast['message'] == "Hello from Admin"
-
 
 def test_websockets_connects_and_sends(client, create_tkt):
     ticket_code = create_tkt

@@ -37,6 +37,7 @@ services:
       DB_NAME: ${POSTGRES_DB}
       DB_USER: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
+      SECRET_KEY: ${SECRET_KEY}
       DB_PORT: 5432
     command: sh -c "python -m app.db.init_db && python -m app.db.seed_db"
     networks:

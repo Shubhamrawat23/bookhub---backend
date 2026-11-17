@@ -55,5 +55,6 @@ services:
       DB_USER: ${POSTGRES_USER}
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_PORT: 5432
+      SECRET_KEY: ${SECRET_KEY}
     networks:
       - bookhub_net # this will be created in VPS directly coz every compose file create own isolated n/w and that can't be access to by other compose file

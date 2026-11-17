@@ -19,9 +19,8 @@ def author_login_route(data: UserLogin, response: Response):
             key="access_token_author",
             value=token,
             httponly=True,
-            secure=True,
-            max_age=3600,
-            samesite="none"
+            secure=False,
+            max_age=3600
         )
 
         del res['data']['access_token']
@@ -45,9 +44,8 @@ def admin_login_route(data: UserLogin, response: Response):
             key="access_token_admin",
             value=token,
             httponly=True,
-            secure=True,
-            max_age=3600,
-            samesite="none"
+            secure=False,
+            max_age=3600
         )
 
         del result['data']['access_token']

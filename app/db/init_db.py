@@ -2,11 +2,12 @@ from app.db.db_connection import db_connection
 
 def create_tables():
     con = db_connection()
-    cur = con.cursor()
 
     if not con:
         print("Database connection failed")
         return
+    
+    cur = con.cursor()
     
     # Author table
     cur.execute("""
@@ -59,7 +60,13 @@ def create_tables():
     """)
 
     # Author's query tkts table
-    cur.execute("CREATE TYPE category_type AS ENUM ('General Level', 'Account Level');")
+    cur.execute("""
+        DO $$ BEGIN
+            CREATE TYPE category_type AS ENUM ('General Level', 'Account Level');
+        EXCEPTION
+            WHEN duplicate_object THEN NULL;
+        END $$;
+    """)
     cur.execute("""        
         CREATE TABLE IF NOT EXISTS query_tickets (
             id SERIAL PRIMARY KEY,

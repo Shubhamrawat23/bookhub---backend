@@ -61,13 +61,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
-      - name: Deploy to VPS
+      - name: Deploy to server
         uses: appleboy/scp-action@v0.1.7
 
         with:
-          host: ${{secrets.VPS_HOST}}
-          username: ${{secrets.VPS_USER}}
-          key: ${{secrets.VPS_SSH_KEY}}
+          host: ${{secrets.SERVER_HOST}}
+          username: ${{secrets.SERVER_USER}}
+          key: ${{secrets.SERVER_SSH_KEY}}
           source: "."
           target: "/home/shubham/bookhub/backend"
           exclude: ".git/**, .github/**, __pycache__/**, .venv/**, test_socket.py"
@@ -75,9 +75,9 @@ jobs:
       - name: Deploy with docker compose
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{secrets.VPS_HOST}}
-          username: ${{secrets.VPS_USER}}
-          key: ${{secrets.VPS_SSH_KEY}}
+          host: ${{secrets.SERVER_HOST}}
+          username: ${{secrets.SERVER_USER}}
+          key: ${{secrets.SERVER_SSH_KEY}}
           script: |
             cd /home/shubham/bookhub/backend
             export POSTGRES_USER=${{ secrets.DB_USER }}

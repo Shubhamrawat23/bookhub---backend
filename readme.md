@@ -28,7 +28,7 @@ https://bookhub-back-end-production.up.railway.app/docs
 
 ## Author Portal
 
-Email: sa001@email.com  
+Email: sa@email.com  
 Password: 123456
 
 #### Note: You can create/update new password for other authors also through forgot password (https://bookhub-frontend.vercel.app/author/forgot-password)

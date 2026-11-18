@@ -2,6 +2,10 @@ volumes:
   bookhub_vol:
     name: bookhub_vol
 
+  tkt_uploads_vol:
+    name: tkt_uploads_vol
+
+
 networks:
   bookhub_net:
     external: true
@@ -56,5 +60,7 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_PORT: 5432
       SECRET_KEY: ${SECRET_KEY}
+    volumes:
+      - 'tkt_uploads_vol:/back-app/uploads'
     networks:
       - bookhub_net # this will be created in VPS directly coz every compose file create own isolated n/w and that can't be access to by other compose file

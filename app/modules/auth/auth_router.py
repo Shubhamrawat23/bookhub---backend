@@ -19,7 +19,7 @@ def author_login_route(data: UserLogin, response: Response):
             key="access_token_author",
             value=token,
             httponly=True,
-            secure=False,
+            secure=True,
             max_age=3600
         )
 
@@ -44,7 +44,7 @@ def admin_login_route(data: UserLogin, response: Response):
             key="access_token_admin",
             value=token,
             httponly=True,
-            secure=False,
+            secure=True,
             max_age=3600
         )
 

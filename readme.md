@@ -1,6 +1,6 @@
 # Bookhub Assignment Backend
 
-Backend service for the Bookhub Author & Admin Support System built using FastAPI and PostgreSQL.
+Backend service for the Bookhub Author & Admin Support System built using FastAPI, PostgreSQL, and Docker. Features secure HttpOnly cookie authentication, real-time WebSocket chat, and a fully automated CI/CD deployment pipeline to an Azure Virtual Machine.
 
 ---
 
@@ -9,18 +9,15 @@ Backend service for the Bookhub Author & Admin Support System built using FastAP
 ## Frontend Application
 
 #### Author Login
-https://bookhub-front-end.vercel.app or https://bookhub-front-end.vercel.app/author/login
+https://bookhubdev.site/ or https://bookhubdev.site/author/login
 
 #### Admin Login
-https://bookhub-front-end.vercel.app/admin/login
-
-## Backend API Domian
-
-https://bookhub-back-end-production.up.railway.app
+https://bookhubdev.site/admin/login
 
 ## Swagger API Documentation
 
-https://bookhub-back-end-production.up.railway.app/docs
+<!-- https://bookhub-back-end-production.up.railway.app/docs -->
+https://bookhubdev.site/api
 
 ---
 
@@ -31,7 +28,6 @@ https://bookhub-back-end-production.up.railway.app/docs
 Email: sa@email.com  
 Password: 123456
 
-#### Note: You can create/update new password for other authors also through forgot password (https://bookhub-frontend.vercel.app/author/forgot-password)
 ---
 
 ## Admin Portal
@@ -58,7 +54,7 @@ The platform includes:
 - Support Ticket System
 - Real-time Ticket Chat System (WebSockets)
 
-The backend exposes REST APIs using FastAPI and stores data using PostgreSQL.
+The backend exposes REST APIs using FastAPI and stores data using PostgreSQL. It is fully containerized using Docker and deployed via an automated CI/CD pipeline.
 
 ---
 
@@ -79,13 +75,33 @@ The backend exposes REST APIs using FastAPI and stores data using PostgreSQL.
 
 ---
 
-# Deployment Notes
+## DevOps & Infrastructure
+- **Containerization:** Docker & Docker Compose
+- **CI/CD:** GitHub Actions
+- **Hosting:** Azure Virtual Machine (Ubuntu 24.04)
+- **Web Server / Proxy:** Nginx (SSL Termination, WebSocket Upgrade)
+- **Database Persistence:** Docker Named Volumes (`bookhub_vol`)
+- **Security:** GitHub Secrets (Runtime injection), Azure NSG, UFW, Let's Encrypt
 
-- Backend deployed on Railway
-- PostgreSQL hosted on Railway PostgreSQL
-- Frontend deployed on Vercel
-- Environment variables configured securely through Railway/Vercel dashboards
-- Configured CORS handling between Railway backend and Vercel frontend (allows `credentials: true` for HttpOnly cookies)
+---
+
+# DevOps & Architecture Highlights
+
+1. **Multi-Container Architecture:** The backend runs alongside a PostgreSQL container. The database is hidden from the public internet and only accessible on an internal Docker network (`bookhub_net`).
+2. **Zero-Downtime Migrations:** The CI/CD pipeline deploys a dedicated `init_db_seed_db` container on every push. The scripts (`init_db.py` and `seed_db.py`) are designed to be **idempotent** (using `IF NOT EXISTS` and `ON CONFLICT DO NOTHING`), ensuring deployments never crash due to existing data.
+3. **WebSocket & Nginx Integration:** The backend exposes WebSocket endpoints. The frontend Nginx container is configured with `proxy_http_version 1.1`, `Upgrade`, and `Connection "upgrade"` headers to seamlessly proxy WebSocket traffic to FastAPI.
+4. **Secure Secret Management:** Database passwords and the JWT `SECRET_KEY` are never stored in the repository. They are injected into the Azure VM at runtime via GitHub Secrets using `export` variables during the SSH deployment step.
+5. **Persistent File Storage:** Uploaded ticket attachments are stored in a Docker named volume (`tkt_uploads_vol`), decoupling data persistence from the container lifecycle.
+
+---
+
+# CI/CD Pipeline (`.github/workflows/back_deploy.yml`)
+
+The GitHub Actions pipeline performs the following:
+1. **Testing:** Spins up a PostgreSQL service container, runs `flake8` for syntax checks, and executes `pytest` for unit and integration testing.
+2. **Deployment:** 
+   - Uses `appleboy/scp-action` to securely copy the latest code to the Azure VM.
+   - SSHes into the VM, exports the environment variables from GitHub Secrets, and runs `docker compose up -d --build`.
 
 ---
 
@@ -188,17 +204,15 @@ PostgreSQL Database
 
 ## Author Side
 
-- Author login
-- Forgot password
-- Password reset
-- Password hashing using SHA256 (implemented for assignment MVP scope)
+- Author login, forgot password, and password reset
+- Fetch author books and metadata
+- Create support tickets
+- Fetch author tickets
 
 ## Admin Side
 
 - Admin login
-- Password hashing using SHA256 (implemented for assignment MVP scope)
 - Admin ticket management
-
 
 
 ## Book Management
@@ -221,9 +235,9 @@ PostgreSQL Database
 ## WebSocket Endpoints
 The chat system bypasses HTTP polling and uses persistent WebSocket connections.
 
- - Author Chat: ws://domain/ticket/ws/author/chat/{ticket_code}
+ - Author Chat: ws://domain/api/ticket/ws/author/chat/{ticket_code}
 
- - Admin Chat: ws://domain/ticket/ws/admin/chat/{ticket_code}
+ - Admin Chat: ws://domain/api/ticket/ws/admin/chat/{ticket_code}
 
 Note: Authentication is handled automatically by the browser via the HttpOnly cookie during the WebSocket handshake.
 
@@ -566,6 +580,9 @@ Example:
 - Redis Pub/Sub for horizontally scaling WebSockets.
 - AI-powered ticket categorization
 - AI-generated admin reply suggestions
+- Image Storage: Migrate from local Docker volumes to Cloud Storage to decouple user uploads from the VM disk.
+
+
 
 ---
 
